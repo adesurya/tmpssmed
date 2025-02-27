@@ -18,16 +18,16 @@ driver.get("https://www.facebook.com/")
 
 # Enter your email/phone and password
 email_input = driver.find_element_by_id("email")
-email_input.send_keys("61559098863856")
+email_input.send_keys('[your_username]')
 password_input = driver.find_element_by_id("pass")
-password_input.send_keys("sesak99")
+password_input.send_keys('[your_pass]')
 password_input.send_keys(Keys.RETURN)
 
 # Wait for the page to load
 WebDriverWait(driver, 10).until(EC.title_contains("Facebook"))
 
 # Navigate to the Facebook page where you want to comment
-driver.get("https://www.facebook.com/photo/?fbid=780248827467429&set=pb.100064469564387.-2207520000")
+driver.get("[your_facebook_page]")
 
 sleep(5)
 

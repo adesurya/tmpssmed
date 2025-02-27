@@ -40,7 +40,7 @@ seleniumwire_options = {
 driver = webdriver.Chrome(
     seleniumwire_options=seleniumwire_options
 )
-#driver= webdriver.Chrome("/media/patusacyber/Data/RschAde/Master/chromedriver")
+
 driver.maximize_window()
 
 driver.get("https://twitter.com/i/flow/login")

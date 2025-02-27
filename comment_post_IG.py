@@ -2,48 +2,64 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support import expected_conditions as EC
-import time
+from time import sleep
+from selenium.webdriver import ActionChains
+import random
+from selenium.common.exceptions import ElementClickInterceptedException
+from selenium.common.exceptions import StaleElementReferenceException
+from selenium.common.exceptions import TimeoutException
+from seleniumwire import webdriver
+from selenium.webdriver.chrome.service import Service as ChromeService
+from webdriver_manager.chrome import ChromeDriverManager
 
-class InstagramBot:
-    def __init__(self, username, password):
-        self.username = username
-        self.password = password
-        self.driver = webdriver.Chrome('/media/patusacyber/Data/RschAde/Master/chromedriver')  # Change this path to your webdriver's location
+commentsDict = [
+'menteri investasi, assalammualaikum @anggawira.id',
+] #Add or replace words...
 
-    def login(self):
-        self.driver.get("https://www.instagram.com/")
-        time.sleep(2)
-        username_input = self.driver.find_element(By.NAME, "username")  
-        password_input = self.driver.find_element(By.NAME, "password")  
-        username_input.send_keys(self.username)
-        password_input.send_keys(self.password)
-        password_input.send_keys(Keys.ENTER)
-        time.sleep(4)
+#Selenium Wire configuration to use a proxy
+proxy_username = '[your_proxy_username]'
+proxy_password = '[your_proxy_password]'
+seleniumwire_options = {
+    'proxy': {
+        'http': f'http://{proxy_username}:{proxy_password}@gw.dataimpulse.com:10001',
+        'verify_ssl': False,
+    },
+}
 
-    def comment_on_post(self, post_url, comment_text):
-        self.driver.get(post_url)
-        time.sleep(2)
-        try:
-            WebDriverWait(self.driver, 10).until(
-                EC.presence_of_element_located((By.XPATH, '//*[@class ="_aaof _aiam"]//textarea'))
-#                (By.XPATH,'//*[@class ="_aaof _aiam"]//textarea').click()
-            ).send_keys(comment_text + Keys.ENTER)
-            time.sleep(2)
-        except Exception as e:
-            print("Failed to comment:", e)
+driver = webdriver.Chrome(
+    seleniumwire_options=seleniumwire_options
+)
 
-    def close(self):
-        self.driver.quit()
+# driver= webdriver.Chrome("/media/patusacyber/Data/RschAde/Master/chromedriver")
 
-# Example usage:
-if __name__ == "__main__":
-    username = [your_username]
-    password = [your_password]
-    post_url = [your_target_url]
-    comment_text = [your_comment]
+# #Apabila tidak menggunakan proxy, gunakan line path ini dan hapus block Selenium Wire
+# driver = webdriver.Chrome('chromedriver')
 
-    bot = InstagramBot(username, password)
-    bot.login()
-    bot.comment_on_post(post_url, comment_text)
-    bot.close()
+
+driver.maximize_window()
+driver.get("https://www.instagram.com")
+sleep(3)
+
+driver.find_element_by_name('username').send_keys('[your_username]') #replace with your insta username
+sleep(1)
+driver.find_element_by_name('password').send_keys('[your_password]') #replace with your insta password
+sleep(2)
+driver.find_element_by_xpath("//button[@type='submit']").click()
+sleep(6)
+driver.get('[your_post_target_url]') #change the url 
+
+sleep(4)
+# post_click=driver.find_element_by_class_name("_aagw").click() #click on first post 
+# sleep(3)
+#like=driver.find_element_by_class_name("xp7jhwk").click() #click on like button
+sleep(4)
+driver.find_element(By.XPATH, "//textarea[@aria-label='Add a comment…']").click()
+sleep(2)
+driver.find_element(By.XPATH, "//textarea[@aria-label='Add a comment…']").send_keys(random.choice(commentsDict)) #send the text in comment section
+sleep(5)
+driver.find_element(By.XPATH, "//textarea[@aria-label='Add a comment…']").click() #click on comment section area
+sleep(5)
+driver.find_element(By.XPATH, "//textarea[@aria-label='Add a comment…']").send_keys(Keys.ENTER) #send the text in comment section
+sleep(5)
